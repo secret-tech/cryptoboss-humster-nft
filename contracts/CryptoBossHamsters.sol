@@ -8,8 +8,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract CryptoBossHamsters is ERC721, ERC721URIStorage, Pausable, Ownable {
+contract CryptoBossHamsters is ERC721, Pausable, Ownable {
     using Counters for Counters.Counter;
+    using Strings for uint256;
 
     Counters.Counter private _tokenIdCounter;
     uint256 private constant NUMBER_OF_UNIQUE_TOKENS = 20;
@@ -36,6 +37,31 @@ contract CryptoBossHamsters is ERC721, ERC721URIStorage, Pausable, Ownable {
         _safeMint(to, tokenId);
     }
 
+    /**
+     * @dev See {IERC721Metadata-tokenURI}.
+     */
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        virtual
+        override
+        returns (string memory)
+    {
+        _requireMinted(tokenId);
+
+        string memory base = _baseURI();
+        uint256 imageID = (tokenId + 1) % NUMBER_OF_UNIQUE_TOKENS;
+        return
+            bytes(base).length > 0
+                ? string(
+                    abi.encodePacked(
+                        string(abi.encodePacked(base, imageID.toString())),
+                        ".json"
+                    )
+                )
+                : "";
+    }
+
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -45,24 +71,7 @@ contract CryptoBossHamsters is ERC721, ERC721URIStorage, Pausable, Ownable {
     }
 
     // The following functions are overrides required by Solidity.
-    function _burn(uint256 tokenId)
-        internal
-        override(ERC721, ERC721URIStorage)
-    {
+    function _burn(uint256 tokenId) internal override(ERC721) {
         super._burn(tokenId);
-    }
-
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
-        uint256 tokenImageId = tokenId % NUMBER_OF_UNIQUE_TOKENS;
-        string memory uri = string.concat(
-            baseURI,
-            Strings.toString(tokenImageId)
-        );
-        return string.concat(uri, ".json");
     }
 }
