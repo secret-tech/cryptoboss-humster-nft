@@ -14,7 +14,7 @@ contract CryptoBossHamsters is ERC721, ERC721URIStorage, Pausable, Ownable {
     Counters.Counter private _tokenIdCounter;
     uint256 private constant NUMBER_OF_UNIQUE_TOKENS = 20;
     string private baseURI =
-        "https://ipfs.io/ipfs/QmcBboh2gJBUFF5M3KJZZfJk2TbAJwwLtpPPnfSc77YfW2/";
+        "https://ipfs.io/ipfs/QmTkLeXoBCusihUbmJHXRozsARRkr6JV5n7V5bHu7Ai8cG/";
 
     constructor() ERC721("CryptoBoss Hamsters", "CRYBH") {}
 
